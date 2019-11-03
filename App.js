@@ -1,64 +1,123 @@
-import React, { Component } from 'react';
-import { TextInput, StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import React, {Component} from 'react';
+import {
+  TextInput,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import SmsListener from 'react-native-android-sms-listener';
 import NotifService from './NotifService';
 import appConfig from './app.json';
 
 type Props = {};
 export default class App extends Component<Props> {
-
   constructor(props) {
     super(props);
     this.state = {
-      senderId: appConfig.senderID
+      senderId: appConfig.senderID,
     };
 
     // Initializing the notification service
-    this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
+    this.notif = new NotifService(
+      this.onRegister.bind(this),
+      this.onNotif.bind(this),
+    );
     // Creating eventlistner to listen on incoming messages
-    
-    this.pp =  SmsListener.addListener(message =>{
+
+    this.pp = SmsListener.addListener(message => {
       console.log(message.body);
       // Calling localNotification ()
       this.notif.localNotif(message.body);
-      
+
       // Calling bubble will goes here
-      // 
-      // 
-    })
-
-  };
-
+      //
+      //
+    });
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Example app react-native-push-notification</Text>
+        <Text style={styles.title}>
+          Example app react-native-push-notification
+        </Text>
         <View style={styles.spacer}></View>
-        <TextInput style={styles.textField} value={this.state.registerToken} placeholder="Register token" />
+        <TextInput
+          style={styles.textField}
+          value={this.state.registerToken}
+          placeholder="Register token"
+        />
         <View style={styles.spacer}></View>
 
-        <TouchableOpacity style={styles.button} onPress={() => { this.notif.localNotif() }}><Text>Local Notification (now)</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => { this.notif.scheduleNotif() }}><Text>Schedule Notification in 30s</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => { this.notif.cancelNotif() }}><Text>Cancel last notification (if any)</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => { this.notif.cancelAll() }}><Text>Cancel all notifications</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => { this.notif.checkPermission(this.handlePerm.bind(this)) }}><Text>Check Permission</Text></TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.notif.localNotif();
+          }}>
+          <Text>Local Notification (now)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.notif.scheduleNotif();
+          }}>
+          <Text>Schedule Notification in 30s</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.notif.cancelNotif();
+          }}>
+          <Text>Cancel last notification (if any)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.notif.cancelAll();
+          }}>
+          <Text>Cancel all notifications</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.notif.checkPermission(this.handlePerm.bind(this));
+          }}>
+          <Text>Check Permission</Text>
+        </TouchableOpacity>
 
         <View style={styles.spacer}></View>
-        <TextInput style={styles.textField} value={this.state.senderId} onChangeText={(e) => {this.setState({ senderId: e })}} placeholder="GCM ID" />
-        <TouchableOpacity style={styles.button} onPress={() => { this.notif.configure(this.onRegister.bind(this), this.onNotif.bind(this), this.state.senderId) }}><Text>Configure Sender ID</Text></TouchableOpacity>
+        <TextInput
+          style={styles.textField}
+          value={this.state.senderId}
+          onChangeText={e => {
+            this.setState({senderId: e});
+          }}
+          placeholder="GCM ID"
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.notif.configure(
+              this.onRegister.bind(this),
+              this.onNotif.bind(this),
+              this.state.senderId,
+            );
+          }}>
+          <Text>Configure Sender ID</Text>
+        </TouchableOpacity>
         {this.state.gcmRegistered && <Text>GCM Configured !</Text>}
 
         <View style={styles.spacer}></View>
       </View>
     );
   }
-  
 
   onRegister(token) {
-    Alert.alert("Registered !", JSON.stringify(token));
+    Alert.alert('Registered !', JSON.stringify(token));
     console.log(token);
-    this.setState({ registerToken: token.token, gcmRegistered: true });
+    this.setState({registerToken: token.token, gcmRegistered: true});
   }
 
   onNotif(notif) {
@@ -67,10 +126,9 @@ export default class App extends Component<Props> {
   }
 
   handlePerm(perms) {
-    Alert.alert("Permissions", JSON.stringify(perms));
+    Alert.alert('Permissions', JSON.stringify(perms));
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -86,28 +144,28 @@ const styles = StyleSheet.create({
   },
   button: {
     borderWidth: 1,
-    borderColor: "#000000",
+    borderColor: '#000000',
     margin: 5,
     padding: 5,
-    width: "70%",
-    backgroundColor: "#DDDDDD",
+    width: '70%',
+    backgroundColor: '#DDDDDD',
     borderRadius: 5,
   },
   textField: {
     borderWidth: 1,
-    borderColor: "#AAAAAA",
+    borderColor: '#AAAAAA',
     margin: 5,
     padding: 5,
-    width: "70%"
+    width: '70%',
   },
   spacer: {
     height: 10,
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
-    textAlign: "center",
-  }
+    textAlign: 'center',
+  },
 });
 
 // SmsListener.addListener(message => {
