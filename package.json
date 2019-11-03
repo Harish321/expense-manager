@@ -11,6 +11,7 @@
     "react": "16.9.0",
     "react-native": "0.61.3",
     "react-native-android-sms-listener": "^0.7.0",
+    "react-native-floating-bubble": "^1.0.5",
     "react-native-get-sms-android": "^1.5.0",
     "react-native-push-notification": "^3.1.9"
   },

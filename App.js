@@ -10,7 +10,12 @@ import {
 import SmsListener from 'react-native-android-sms-listener';
 import NotifService from './NotifService';
 import appConfig from './app.json';
-
+import {
+  showFloatingBubble,
+  hideFloatingBubble,
+  requestPermission,
+  initialize,
+} from 'react-native-floating-bubble';
 type Props = {};
 export default class App extends Component<Props> {
   constructor(props) {
@@ -36,7 +41,12 @@ export default class App extends Component<Props> {
       //
     });
   }
-
+  componentDidMount() {
+    requestPermission()
+      .then(() => console.log('Permission Granted'))
+      .catch(() => console.log('Permission is not granted'));
+    // initialize().then(() => console.log('Initialized the bubble mange'));
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -54,6 +64,9 @@ export default class App extends Component<Props> {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
+            showFloatingBubble(10, 10).then(() =>
+              console.log('Floating Bubble Added'),
+            );
             this.notif.localNotif();
           }}>
           <Text>Local Notification (now)</Text>
